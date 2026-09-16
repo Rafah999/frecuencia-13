@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://cmldv42biqnem"]
+
+[ext_resource type="Script" uid="uid://bcvp3ex8e3ihd" path="res://scripts/menu/main_menu.gd" id="1_m2yvp"]
+[ext_resource type="Texture2D" uid="uid://c52vtsphvvvim" path="res://assets/art/environment/menu_radio_background.png" id="2_s3dsm"]
+
+[node name="MainMenu" type="Control" unique_id=1126888233]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_m2yvp")
+
+[node name="Background" type="TextureRect" parent="." unique_id=342713101]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 650.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_s3dsm")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1221485749]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 300.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=744271026]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="CenterContainer/VBoxContainer" unique_id=829707155]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9019608, 0.88235295, 0.8352941, 1)
+theme_override_font_sizes/font_size = 32
+text = "FRECUENCIA 13"
+
+[node name="Subtitle" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1932707234]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5411765, 0.52156866, 0.5019608, 1)
+theme_override_font_sizes/font_size = 12
+text = "PUERTO BRUMA"
+
+[node name="MenuButtons" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1216094847]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NewGameButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=1878906345]
+layout_mode = 2
+text = "Nuevo Juego
+"
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=2042394511]
+layout_mode = 2
+text = "Continuar Juego
+"
+
+[node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=843523513]
+layout_mode = 2
+text = "Configuracion
+"
+
+[node name="ExitButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=993745191]
+layout_mode = 2
+text = "Cerrar Juego"
+
+[connection signal="mouse_entered" from="CenterContainer/VBoxContainer/MenuButtons/NewGameButton" to="." method="_on_new_game_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/VBoxContainer/MenuButtons/NewGameButton" to="." method="_on_new_game_button_mouse_exited"]
+[connection signal="mouse_entered" from="CenterContainer/VBoxContainer/MenuButtons/ContinueButton" to="." method="_on_continue_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/VBoxContainer/MenuButtons/ContinueButton" to="." method="_on_continue_button_mouse_exited"]
+[connection signal="mouse_entered" from="CenterContainer/VBoxContainer/MenuButtons/OptionsButton" to="." method="_on_options_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/VBoxContainer/MenuButtons/OptionsButton" to="." method="_on_options_button_mouse_exited"]
+[connection signal="mouse_entered" from="CenterContainer/VBoxContainer/MenuButtons/ExitButton" to="." method="_on_exit_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/VBoxContainer/MenuButtons/ExitButton" to="." method="_on_exit_button_mouse_exited"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/MenuButtons/ExitButton" to="." method="_on_exit_button_pressed"]
