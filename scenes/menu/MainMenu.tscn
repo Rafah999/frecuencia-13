@@ -2,6 +2,51 @@
 
 [ext_resource type="Script" uid="uid://bcvp3ex8e3ihd" path="res://scripts/menu/main_menu.gd" id="1_m2yvp"]
 [ext_resource type="Texture2D" uid="uid://c52vtsphvvvim" path="res://assets/art/environment/menu_radio_background.png" id="2_s3dsm"]
+[ext_resource type="Shader" uid="uid://cwfaftnysjq6o" path="res://scenes/menu/MainMenu.gdshader" id="3_iv2fv"]
+[ext_resource type="Texture2D" uid="uid://ckdwoo1f20npo" path="res://assets/art/ui/Titulo_F13.png" id="3_uwj7d"]
+
+[sub_resource type="Theme" id="Theme_2nud1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iv2fv"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0, 0, 0, 0.3137255)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8235294, 0.8235294, 0.78431374, 0.50980395)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mgsx5"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.09803922, 0.09803922, 0.09803922, 0.5882353)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.9019608, 0.9019608, 0.8627451, 0.8627451)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wp5od"]
+shader = ExtResource("3_iv2fv")
+
+[sub_resource type="GDScript" id="GDScript_2nud1"]
+script/source = "extends ColorRect
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
 
 [node name="MainMenu" type="Control" unique_id=1126888233]
 layout_mode = 3
@@ -26,8 +71,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 300.0
-offset_bottom = 360.0
+offset_left = 1.0
+offset_top = 73.0
+offset_right = 205.0
+offset_bottom = 363.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -35,40 +82,118 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Title" type="Label" parent="CenterContainer/VBoxContainer" unique_id=829707155]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9019608, 0.88235295, 0.8352941, 1)
-theme_override_font_sizes/font_size = 32
-text = "FRECUENCIA 13"
-
-[node name="Subtitle" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1932707234]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.5411765, 0.52156866, 0.5019608, 1)
-theme_override_font_sizes/font_size = 12
-text = "PUERTO BRUMA"
-
 [node name="MenuButtons" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1216094847]
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="NewGameButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=1878906345]
 layout_mode = 2
+theme = SubResource("Theme_2nud1")
+theme_override_colors/font_hover_color = Color(0.9411765, 0.9411765, 0.9019608, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_iv2fv")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mgsx5")
 text = "Nuevo Juego
 "
 
-[node name="ContinueButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=2042394511]
-layout_mode = 2
-text = "Continuar Juego
-"
+[node name="StaticOverlay" type="ColorRect" parent="CenterContainer/VBoxContainer/MenuButtons/NewGameButton" unique_id=390440220]
+visible = false
+material = SubResource("ShaderMaterial_wp5od")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = SubResource("GDScript_2nud1")
 
-[node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=843523513]
+[node name="ContinueButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=1180509359]
 layout_mode = 2
-text = "Configuracion
-"
+theme = SubResource("Theme_2nud1")
+theme_override_colors/font_hover_color = Color(0.9411765, 0.9411765, 0.9019608, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_iv2fv")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mgsx5")
+text = "Continuar Juego"
 
-[node name="ExitButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=993745191]
+[node name="StaticOverlay" type="ColorRect" parent="CenterContainer/VBoxContainer/MenuButtons/ContinueButton" unique_id=1830931167]
+visible = false
+material = SubResource("ShaderMaterial_wp5od")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = SubResource("GDScript_2nud1")
+
+[node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=552826408]
 layout_mode = 2
-text = "Cerrar Juego"
+theme = SubResource("Theme_2nud1")
+theme_override_colors/font_hover_color = Color(0.9411765, 0.9411765, 0.9019608, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_iv2fv")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mgsx5")
+text = "Configuracion"
+
+[node name="StaticOverlay" type="ColorRect" parent="CenterContainer/VBoxContainer/MenuButtons/OptionsButton" unique_id=67058384]
+visible = false
+material = SubResource("ShaderMaterial_wp5od")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = SubResource("GDScript_2nud1")
+
+[node name="ExitButton" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons" unique_id=1989563084]
+layout_mode = 2
+theme = SubResource("Theme_2nud1")
+theme_override_colors/font_hover_color = Color(0.9411765, 0.9411765, 0.9019608, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_iv2fv")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mgsx5")
+text = "Salir del juego"
+
+[node name="StaticOverlay" type="ColorRect" parent="CenterContainer/VBoxContainer/MenuButtons/ExitButton" unique_id=504552898]
+visible = false
+material = SubResource("ShaderMaterial_wp5od")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = SubResource("GDScript_2nud1")
+
+[node name="Logo" type="TextureRect" parent="." unique_id=1180170974]
+layout_mode = 0
+offset_left = -21.0
+offset_top = -4.0
+offset_right = 405.0
+offset_bottom = 116.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("3_uwj7d")
+expand_mode = 1
+stretch_mode = 5
 
 [connection signal="mouse_entered" from="CenterContainer/VBoxContainer/MenuButtons/NewGameButton" to="." method="_on_new_game_button_mouse_entered"]
 [connection signal="mouse_exited" from="CenterContainer/VBoxContainer/MenuButtons/NewGameButton" to="." method="_on_new_game_button_mouse_exited"]
