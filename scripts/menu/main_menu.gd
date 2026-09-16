@@ -28,6 +28,8 @@ func _on_new_game_button_mouse_entered() -> void:
 func _on_new_game_button_mouse_exited() -> void:
 	_unhover_button($CenterContainer/VBoxContainer/MenuButtons/NewGameButton)
 
+func _on_new_game_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/main/TestRoom.tscn")
 
 # =========================================================
 # CONTINUAR

@@ -197,6 +197,7 @@ stretch_mode = 5
 
 [connection signal="mouse_entered" from="CenterContainer/VBoxContainer/MenuButtons/NewGameButton" to="." method="_on_new_game_button_mouse_entered"]
 [connection signal="mouse_exited" from="CenterContainer/VBoxContainer/MenuButtons/NewGameButton" to="." method="_on_new_game_button_mouse_exited"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/MenuButtons/NewGameButton" to="." method="_on_new_game_button_pressed"]
 [connection signal="mouse_entered" from="CenterContainer/VBoxContainer/MenuButtons/ContinueButton" to="." method="_on_continue_button_mouse_entered"]
 [connection signal="mouse_exited" from="CenterContainer/VBoxContainer/MenuButtons/ContinueButton" to="." method="_on_continue_button_mouse_exited"]
 [connection signal="mouse_entered" from="CenterContainer/VBoxContainer/MenuButtons/OptionsButton" to="." method="_on_options_button_mouse_entered"]
