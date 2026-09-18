@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://duhf2q0cce4o5"]
+
+[ext_resource type="Script" uid="uid://bdqjmkgc8cnfu" path="res://scripts/systems/interactable.gd" id="1_snbrq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qq6rn"]
+
+[node name="Radio" type="Area2D" unique_id=204852373]
+script = ExtResource("1_snbrq")
+interaction_text = "InEncenteractuar"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1903655932]
+position = Vector2(30, 25)
+shape = SubResource("RectangleShape2D_qq6rn")

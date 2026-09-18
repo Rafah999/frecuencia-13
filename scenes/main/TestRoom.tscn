@@ -2,9 +2,13 @@
 
 [ext_resource type="PackedScene" uid="uid://bmf13huoi1s7h" path="res://scenes/player/Player.tscn" id="1_0v1y0"]
 [ext_resource type="Script" uid="uid://bkrtnoumaxhcp" path="res://scripts/core/test_room.gd" id="1_wwu56"]
+[ext_resource type="PackedScene" uid="uid://duhf2q0cce4o5" path="res://scenes/objects/Radio.tscn" id="2_pedww"]
 
 [node name="TestRoom" type="Node2D" unique_id=1247542393]
 script = ExtResource("1_wwu56")
+
+[node name="Radio" parent="." unique_id=204852373 instance=ExtResource("2_pedww")]
+position = Vector2(450, 180)
 
 [node name="Player" parent="." unique_id=1293326365 instance=ExtResource("1_0v1y0")]
 position = Vector2(301, 177)

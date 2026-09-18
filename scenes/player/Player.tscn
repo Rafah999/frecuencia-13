@@ -4,6 +4,8 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wp5od"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qq6rn"]
+
 [node name="Player" type="CharacterBody2D" unique_id=1293326365]
 script = ExtResource("1_wr5hl")
 
@@ -11,3 +13,9 @@ script = ExtResource("1_wr5hl")
 shape = SubResource("RectangleShape2D_wp5od")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=570189712]
+
+[node name="InteractionArea" type="Area2D" parent="." unique_id=770785697]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=922496929]
+position = Vector2(50, 50)
+shape = SubResource("RectangleShape2D_qq6rn")

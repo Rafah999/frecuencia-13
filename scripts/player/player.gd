@@ -26,6 +26,10 @@ func crear_jugador_temporal() -> void:
 func _physics_process(delta: float) -> void:
 	var direction := Vector2.ZERO
 
+	# =====================================================
+	# MOVIMIENTO
+	# =====================================================
+
 	if Input.is_action_pressed("move_left"):
 		direction.x -= 1.0
 
@@ -38,9 +42,28 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("move_down"):
 		direction.y += 1.0
 
+	# Evitar mayor velocidad en diagonal
 	if direction.length() > 0.0:
 		direction = direction.normalized()
 
 	velocity = direction * speed
 
 	move_and_slide()
+
+	# =====================================================
+	# INTERACCIÓN
+	# =====================================================
+
+	if Input.is_action_just_pressed("interact"):
+		intentar_interactuar()
+
+
+func intentar_interactuar() -> void:
+
+	var objetos = $InteractionArea.get_overlapping_areas()
+
+	for objeto in objetos:
+
+		if objeto.has_method("interact"):
+			objeto.interact()
+			return
