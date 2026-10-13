@@ -27,9 +27,11 @@ func _on_new_game_button_mouse_entered() -> void:
 
 func _on_new_game_button_mouse_exited() -> void:
 	_unhover_button($CenterContainer/VBoxContainer/MenuButtons/NewGameButton)
-
+	
+	
 func _on_new_game_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/main/TestRoom.tscn")
+	get_tree().change_scene_to_file("res://scenes/menu/NewGame.tscn")
+
 
 # =========================================================
 # CONTINUAR
@@ -42,6 +44,10 @@ func _on_continue_button_mouse_entered() -> void:
 func _on_continue_button_mouse_exited() -> void:
 	_unhover_button($CenterContainer/VBoxContainer/MenuButtons/ContinueButton)
 
+func _on_continue_button_pressed() -> void:
+	get_tree().change_scene_to_file(
+		"res://scenes/menu/ContinueMenu.tscn"
+	)
 
 # =========================================================
 # CONFIGURACIÓN
