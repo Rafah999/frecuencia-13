@@ -1,16 +1,19 @@
-
 extends Control
 
 const MAIN_MENU_SCENE := "res://scenes/menu/MainMenu.tscn"
 const GAME_SCENE := "res://scenes/main/TestRoom.tscn"
+const BACKGROUND_TEXTURE := "res://images/backgrounds/menu_continue.jpeg"
+const TITLE_TEXTURE := "res://images/ui/title_continue.png"
 
 var saves_container: VBoxContainer
 var status_label: Label
-var details_dialog: ConfirmationDialog
-var delete_dialog: ConfirmationDialog
+var details_dialog: F13Modal
+var delete_dialog: F13Modal
 
 var selected_save_id := ""
 var selected_save: Dictionary = {}
+
+var _fade: ScreenFade
 
 
 func _ready() -> void:
@@ -19,90 +22,91 @@ func _ready() -> void:
 
 
 func _build_interface() -> void:
-
-	# Fondo
-	
-	# Fondo
-	var background := TextureRect.new()
-	background.name = "Background"
-	background.texture = load(
-		"res://images/backgrounds/menu_continue.jpeg"
-	) as Texture2D
-
-	background.set_anchors_and_offsets_preset(
-		Control.PRESET_FULL_RECT
-	)
-	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	background.stretch_mode = TextureRect.STRETCH_SCALE
-	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	add_child(background)
-	move_child(background, 0)
-	
-	print("Textura: ", background.texture)
-	print("Tamaño del fondo: ", background.size)
-
-
+	_add_background()
+	_add_vignette()
 
 	var root := VBoxContainer.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.offset_left = 24
-	root.offset_top = 18
-	root.offset_right = -24
-	root.offset_bottom = -18
-	root.add_theme_constant_override("separation", 10)
+	root.offset_left = 20
+	root.offset_top = 14
+	root.offset_right = -20
+	root.offset_bottom = -14
+	root.add_theme_constant_override("separation", 8)
 	add_child(root)
 
-	var title := Label.new()
-	title.text = "CONTINUAR PARTIDA"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 25)
-	root.add_child(title)
+	root.add_child(F13Style.title_image(TITLE_TEXTURE, "CONTINUAR PARTIDA", 52.0))
 
-	var subtitle := Label.new()
-	subtitle.text = "Selecciona una partida guardada"
+	var subtitle := F13Style.label("Selecciona una partida guardada", 12, F13Style.INK_DIM)
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	root.add_child(subtitle)
 
-	status_label = Label.new()
+	root.add_child(F13Style.separator())
+
+	status_label = F13Style.caption("", 11)
 	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	root.add_child(status_label)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	root.add_child(scroll)
 
 	saves_container = VBoxContainer.new()
 	saves_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	saves_container.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	saves_container.add_theme_constant_override("separation", 10)
-	root.add_child(saves_container)
+	saves_container.add_theme_constant_override("separation", 8)
+	scroll.add_child(saves_container)
 
 	var bottom := HBoxContainer.new()
 	bottom.alignment = BoxContainer.ALIGNMENT_CENTER
 	bottom.add_theme_constant_override("separation", 12)
 	root.add_child(bottom)
 
-	var refresh_button := Button.new()
+	var refresh_button := F13Button.new()
 	refresh_button.text = "ACTUALIZAR"
+	refresh_button.custom_minimum_size = Vector2(150, 32)
 	refresh_button.pressed.connect(_refresh_saves)
 	bottom.add_child(refresh_button)
 
-	var back_button := Button.new()
+	var back_button := F13Button.new()
 	back_button.text = "VOLVER"
+	back_button.custom_minimum_size = Vector2(150, 32)
 	back_button.pressed.connect(_back_to_menu)
 	bottom.add_child(back_button)
 
-	details_dialog = ConfirmationDialog.new()
-	details_dialog.title = "DETALLES DE LA PARTIDA"
-	details_dialog.ok_button_text = "CARGAR PARTIDA"
-	details_dialog.cancel_button_text = "VOLVER"
+	details_dialog = F13Modal.new()
 	details_dialog.confirmed.connect(_load_selected_save)
 	add_child(details_dialog)
 
-	delete_dialog = ConfirmationDialog.new()
-	delete_dialog.title = "ELIMINAR PARTIDA"
-	delete_dialog.dialog_text = "¿Seguro que deseas eliminar esta partida?"
-	delete_dialog.ok_button_text = "ELIMINAR"
-	delete_dialog.cancel_button_text = "CANCELAR"
+	delete_dialog = F13Modal.new()
 	delete_dialog.confirmed.connect(_delete_selected_save)
 	add_child(delete_dialog)
+
+	_fade = ScreenFade.new()
+	add_child(_fade)
+
+
+func _add_background() -> void:
+	var background := TextureRect.new()
+	background.name = "Background"
+	if ResourceLoader.exists(BACKGROUND_TEXTURE):
+		background.texture = load(BACKGROUND_TEXTURE) as Texture2D
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	background.stretch_mode = TextureRect.STRETCH_SCALE
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(background)
+	move_child(background, 0)
+
+
+func _add_vignette() -> void:
+	var vignette := ColorRect.new()
+	vignette.color = Color(0, 0, 0, 0.34)
+	vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(vignette)
 
 
 func _refresh_saves() -> void:
@@ -112,8 +116,6 @@ func _refresh_saves() -> void:
 
 	var saves: Array[Dictionary] = SaveManager.get_saves()
 
-	print("PARTIDAS ENCONTRADAS: ", saves.size())
-
 	if saves.is_empty():
 		status_label.text = "No hay partidas guardadas."
 		return
@@ -121,16 +123,14 @@ func _refresh_saves() -> void:
 	status_label.text = "Partidas encontradas: " + str(saves.size())
 
 	for save_data in saves:
-		print("CREANDO TARJETA: ", save_data.get("name", "Sin nombre"))
 		_add_save_card(save_data)
-
-	print("TARJETAS EN EL CONTENEDOR: ", saves_container.get_child_count())
 
 
 func _add_save_card(data: Dictionary) -> void:
 	var panel := PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	panel.add_theme_stylebox_override("panel", F13Style.card_box())
 	saves_container.add_child(panel)
 
 	var row := HBoxContainer.new()
@@ -139,27 +139,26 @@ func _add_save_card(data: Dictionary) -> void:
 
 	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.add_theme_constant_override("separation", 2)
 	row.add_child(info)
 
-	var name_label := Label.new()
-	name_label.text = str(data.get("name", "Partida sin nombre"))
-	name_label.add_theme_font_size_override("font_size", 16)
+	var name_label := F13Style.label(str(data.get("name", "Partida sin nombre")), 15)
 	info.add_child(name_label)
 
-	var chapter_label := Label.new()
-	chapter_label.text = _chapter_name(int(data.get("chapter", 1)))
-	chapter_label.add_theme_font_size_override("font_size", 12)
+	var chapter_label := F13Style.label(
+		_chapter_name(int(data.get("chapter", 1))), 11, F13Style.INK_FAINT
+	)
 	info.add_child(chapter_label)
 
-	var details_button := Button.new()
+	var details_button := F13Button.new()
 	details_button.text = "DETALLES"
-	details_button.pressed.connect(
-		_show_details.bind(data.duplicate(true))
-	)
+	details_button.custom_minimum_size = Vector2(110, 30)
+	details_button.pressed.connect(_show_details.bind(data.duplicate(true)))
 	row.add_child(details_button)
 
-	var delete_button := Button.new()
+	var delete_button := F13Button.new()
 	delete_button.text = "ELIMINAR"
+	delete_button.custom_minimum_size = Vector2(110, 30)
 	delete_button.pressed.connect(
 		_ask_delete.bind(
 			str(data.get("id", "")),
@@ -204,17 +203,16 @@ func _show_details(data: Dictionary) -> void:
 		)
 	)
 
-	details_dialog.dialog_text = text
-	details_dialog.popup_centered()
+	details_dialog.open("DETALLES DE LA PARTIDA", text, "CARGAR PARTIDA", "VOLVER")
 
 
 func _ask_delete(save_id: String, save_name: String) -> void:
 	selected_save_id = save_id
-	delete_dialog.dialog_text = (
+	var text := (
 		"¿Seguro que deseas eliminar «" + save_name + "»?\n"
 		+ "Esta acción no se puede deshacer."
 	)
-	delete_dialog.popup_centered()
+	delete_dialog.open("ELIMINAR PARTIDA", text, "ELIMINAR", "CANCELAR")
 
 
 func _delete_selected_save() -> void:
@@ -236,7 +234,6 @@ func _load_selected_save() -> void:
 	var data := SaveManager.load_save(selected_save_id)
 
 	if data.is_empty():
-		details_dialog.hide()
 		status_label.text = "No se pudo cargar la partida."
 		_refresh_saves()
 		return
@@ -247,7 +244,7 @@ func _load_selected_save() -> void:
 		data.get("difficulty", "Normal")
 	)
 
-	var error := get_tree().change_scene_to_file(
+	var error: int = await _fade.change_scene(
 		str(data.get("scene_path", GAME_SCENE))
 	)
 
@@ -268,4 +265,4 @@ func _chapter_name(chapter: int) -> String:
 
 
 func _back_to_menu() -> void:
-	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+	await _fade.change_scene(MAIN_MENU_SCENE)
