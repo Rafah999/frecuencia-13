@@ -1,8 +1,23 @@
 extends Control
 
+const NEW_GAME_SCENE := "res://scenes/menu/NewGame.tscn"
+const CONTINUE_SCENE := "res://scenes/menu/ContinueMenu.tscn"
+
+var _fade: ScreenFade
+
 
 func _ready() -> void:
-	pass
+	# Viñeta, scanlines e interferencia ambiental (por debajo de la interfaz).
+	var ambient: Variant = F13Overlay.new()
+	add_child(ambient)
+	move_child(ambient, 1)
+
+	# Interferencia ocasional que afecta a TODA la pantalla (por encima de la UI).
+	add_child(F13Overlay.new(F13Overlay.Layer.INTERFERENCE))
+
+	# Fundido de entrada y transiciones.
+	_fade = ScreenFade.new()
+	add_child(_fade)
 
 
 func _process(delta: float) -> void:
@@ -14,6 +29,7 @@ func _process(delta: float) -> void:
 # =========================================================
 
 func _on_exit_button_pressed() -> void:
+	await _fade.fade_out()
 	get_tree().quit()
 
 
@@ -30,7 +46,7 @@ func _on_new_game_button_mouse_exited() -> void:
 	
 	
 func _on_new_game_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/menu/NewGame.tscn")
+	await _fade.change_scene(NEW_GAME_SCENE)
 
 
 # =========================================================
@@ -45,9 +61,7 @@ func _on_continue_button_mouse_exited() -> void:
 	_unhover_button($CenterContainer/VBoxContainer/MenuButtons/ContinueButton)
 
 func _on_continue_button_pressed() -> void:
-	get_tree().change_scene_to_file(
-		"res://scenes/menu/ContinueMenu.tscn"
-	)
+	await _fade.change_scene(CONTINUE_SCENE)
 
 # =========================================================
 # CONFIGURACIÓN

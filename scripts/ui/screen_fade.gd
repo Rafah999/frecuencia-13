@@ -35,6 +35,13 @@ func fade_in(duration: float = 0.35) -> void:
 	t.tween_property(_rect, "color:a", 0.0, duration)
 
 
+func fade_out(duration: float = 0.28) -> void:
+	_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+	var t := create_tween()
+	t.tween_property(_rect, "color:a", 1.0, duration)
+	await t.finished
+
+
 func change_scene(path: String, duration: float = 0.28) -> Error:
 	if _busy:
 		return ERR_BUSY
