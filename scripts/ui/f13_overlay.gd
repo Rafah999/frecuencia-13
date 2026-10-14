@@ -75,6 +75,10 @@ var _interference_material: ShaderMaterial
 var _timer: Timer
 var _rng := RandomNumberGenerator.new()
 
+# Configuración por instancia (ajustar ANTES de add_child).
+var interval_range := Vector2(5.0, 12.0)  # segundos entre interferencias
+var strength_scale := 1.0                 # 0..1, intensidad de cada interferencia
+
 
 func _init(layer: int = Layer.AMBIENT) -> void:
 	_layer = layer
@@ -144,18 +148,20 @@ func _ready() -> void:
 func _schedule() -> void:
 	if not is_inside_tree():
 		return
-	if _layer == Layer.INTERFERENCE:
-		_timer.start(_rng.randf_range(5.0, 12.0))
-	else:
-		_timer.start(_rng.randf_range(7.0, 15.0))
+	_timer.start(_rng.randf_range(interval_range.x, interval_range.y))
 
 
 func _on_timeout() -> void:
+	trigger()
+	_schedule()
+
+
+# Dispara una interferencia de inmediato (p. ej. al interactuar con la UI).
+func trigger() -> void:
 	if _layer == Layer.INTERFERENCE:
 		_play_screen_glitch()
 	else:
 		_play_band_glitch()
-	_schedule()
 
 
 func _set_strength(value: float) -> void:
@@ -166,10 +172,11 @@ func _set_strength(value: float) -> void:
 func _play_screen_glitch() -> void:
 	if not is_inside_tree() or _interference_material == null:
 		return
+	var peak: float = clampf(strength_scale, 0.0, 1.0)
 	var t := create_tween()
-	t.tween_method(_set_strength, 0.0, 1.0, 0.05)
+	t.tween_method(_set_strength, 0.0, peak, 0.05)
 	t.tween_interval(0.04)
-	t.tween_method(_set_strength, 1.0, 0.0, 0.14)
+	t.tween_method(_set_strength, peak, 0.0, 0.14)
 
 
 func _play_band_glitch() -> void:
@@ -178,6 +185,7 @@ func _play_band_glitch() -> void:
 
 	var view_height: float = size.y if size.y > 0.0 else 360.0
 	var y: float = _rng.randf_range(0.0, max(view_height - 8.0, 1.0))
+	var alpha: float = 0.16 * clampf(strength_scale, 0.0, 2.0)
 
 	_glitch.offset_top = y
 	_glitch.offset_bottom = y + 3.0
@@ -185,7 +193,7 @@ func _play_band_glitch() -> void:
 
 	var sweep := create_tween()
 	sweep.set_parallel(true)
-	sweep.tween_property(_glitch, "color:a", 0.16, 0.04)
+	sweep.tween_property(_glitch, "color:a", alpha, 0.04)
 	sweep.tween_property(_glitch, "offset_top", y + 7.0, 0.16)
 	sweep.tween_property(_glitch, "offset_bottom", y + 10.0, 0.16)
 

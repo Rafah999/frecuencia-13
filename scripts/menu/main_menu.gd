@@ -4,16 +4,21 @@ const NEW_GAME_SCENE := "res://scenes/menu/NewGame.tscn"
 const CONTINUE_SCENE := "res://scenes/menu/ContinueMenu.tscn"
 
 var _fade: ScreenFade
+var _screen_glitch: F13Overlay
 
 
 func _ready() -> void:
-	# Viñeta, scanlines e interferencia ambiental (por debajo de la interfaz).
-	var ambient: Variant = F13Overlay.new()
+	# Viñeta, scanlines e interferencia ambiental (por debajo de la UI).
+	var ambient := F13Overlay.new()
+	ambient.interval_range = Vector2(4.0, 9.0)
 	add_child(ambient)
 	move_child(ambient, 1)
 
-	# Interferencia ocasional que afecta a TODA la pantalla (por encima de la UI).
-	add_child(F13Overlay.new(F13Overlay.Layer.INTERFERENCE))
+	# Interferencia de PANTALLA COMPLETA, más frecuente y ligada a la interacción.
+	_screen_glitch = F13Overlay.new(F13Overlay.Layer.INTERFERENCE)
+	_screen_glitch.interval_range = Vector2(3.0, 7.0)
+	_screen_glitch.strength_scale = 1.0
+	add_child(_screen_glitch)
 
 	# Fundido de entrada y transiciones.
 	_fade = ScreenFade.new()
@@ -29,6 +34,7 @@ func _process(delta: float) -> void:
 # =========================================================
 
 func _on_exit_button_pressed() -> void:
+	_screen_glitch.trigger()
 	await _fade.fade_out()
 	get_tree().quit()
 
@@ -46,6 +52,7 @@ func _on_new_game_button_mouse_exited() -> void:
 	
 	
 func _on_new_game_button_pressed() -> void:
+	_screen_glitch.trigger()
 	await _fade.change_scene(NEW_GAME_SCENE)
 
 
@@ -61,6 +68,7 @@ func _on_continue_button_mouse_exited() -> void:
 	_unhover_button($CenterContainer/VBoxContainer/MenuButtons/ContinueButton)
 
 func _on_continue_button_pressed() -> void:
+	_screen_glitch.trigger()
 	await _fade.change_scene(CONTINUE_SCENE)
 
 # =========================================================
@@ -92,6 +100,13 @@ func _on_exit_button_mouse_exited() -> void:
 # =========================================================
 
 func _hover_button(button: Button) -> void:
+
+	# -----------------------------------------------------
+	# INTERFERENCIA DE PANTALLA AL PASAR EL MOUSE
+	# -----------------------------------------------------
+
+	if _screen_glitch != null:
+		_screen_glitch.trigger()
 
 	# -----------------------------------------------------
 	# MOSTRAR INTERFERENCIA
